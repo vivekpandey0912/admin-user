@@ -5,11 +5,8 @@ spring:
     mongodb:
       uri: mongodb://localhost:27017/AdminLibraryDatabase
   application:
-    name: eurekaToDoClient
-  servlet:
-    multipart:
-      max-file-size: 10MB
-      max-request-size: 10MB
+    name: AdminUserClient
+
 eureka:
   client:
     register-with-eureka: true
