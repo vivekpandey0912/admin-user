@@ -3,7 +3,7 @@ server:
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/AdminLibraryDatabase
+      uri: mongodb://localhost:27017/AdminLibraryDatabase4
   application:
     name: AdminUserClient
 
@@ -13,4 +13,3 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: http://localhost:8761/eureka
-
