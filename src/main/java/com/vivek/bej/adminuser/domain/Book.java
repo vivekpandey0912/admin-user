@@ -1,10 +1,12 @@
 package com.vivek.bej.adminuser.domain;
 
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
 import java.util.Objects;
 
+@Document
 public class Book {
 
     @Id
