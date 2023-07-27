@@ -7,12 +7,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 
 @Document
-public class Genre {
+public class Author {
 
     @Id
     private String id;
     private String name;
-    // Other genre-related fields, e.g., description, category, etc.
     @DBRef
-    private List<Book> books;
+    private List<Genre> genreList;
 }
