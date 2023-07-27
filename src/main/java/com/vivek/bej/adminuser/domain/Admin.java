@@ -1,7 +1,7 @@
 package com.vivek.bej.adminuser.domain;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.*;
 
-
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 import java.util.Objects;
@@ -9,9 +9,11 @@ import java.util.Objects;
 
 @Document
 public class Admin {
-private String emailId;
-private String name;
-private List<Author> authorList;
+
+   @Id
+    private String emailId;
+    private String name;
+    private List<Author> authorList;
 
     public Admin(String emailId, String name, List<Author> authorList) {
         this.emailId = emailId;
