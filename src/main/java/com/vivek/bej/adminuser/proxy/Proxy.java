@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-@FeignClient(name = "UserAuthenticationService", url = "localhost:8084/")
+@FeignClient(name = "UserAuthenticationService", url = "localhost:8084")
 public interface Proxy {
 
     @RequestMapping("/authUser/registerUser")
