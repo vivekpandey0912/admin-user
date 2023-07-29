@@ -48,6 +48,7 @@ public class AdminServiceImpl implements AdminService {
             admin.setAdminType("admin");
             Admin instanceUser = adminRepository.save(admin);
             if (!instanceUser.getName().isEmpty()) proxy.registerUser(instanceUser);
+            mailService.sendRegisterMail(instanceUser.getEmailId(),instanceUser);
             return instanceUser;
 
         }

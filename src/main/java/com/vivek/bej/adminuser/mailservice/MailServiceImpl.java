@@ -1,5 +1,6 @@
 package com.vivek.bej.adminuser.mailservice;
 
+import com.vivek.bej.adminuser.domain.Admin;
 import com.vivek.bej.adminuser.domain.Book;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
@@ -31,5 +32,16 @@ public class MailServiceImpl implements MailService {
         message.setSubject("Book Deleted");
         message.setText("The book has been deleted: " + book.getTitle());
         mailSender.send(message);
+    }
+
+    @Override
+    public void sendRegisterMail(String emailId, Admin admin) {
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(emailId);
+        message.setSubject("You got Registered Successfully");
+        message.setText("Thanks for registering" + admin.getName());
+        mailSender.send(message);
+
     }
 }
