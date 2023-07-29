@@ -1,11 +1,11 @@
 package com.vivek.bej.adminuser.domain;
 
-import org.springframework.data.mongodb.core.mapping.MongoId;
+import org.springframework.data.annotation.Id;
 
 import java.util.Objects;
 public class Book {
 
-    @MongoId
+    @Id
     private String bookId;
     private String title;
     private String ISBN;

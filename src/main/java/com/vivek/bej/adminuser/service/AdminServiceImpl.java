@@ -21,6 +21,8 @@ import java.util.*;
 @Service
 public class AdminServiceImpl implements AdminService {
 
+    private final BookIdGeneratorService bookIdGenerator;
+
 
     private final AdminRepository adminRepository;
     private final AuthorRepository authorRepository;
@@ -30,7 +32,8 @@ public class AdminServiceImpl implements AdminService {
 
     private final MailService mailService;
 
-    public AdminServiceImpl(AdminRepository adminRepository, AuthorRepository authorRepository, BookRepository bookRepository, GenreRepository genreRepository, Proxy proxy, MailService mailService) {
+    public AdminServiceImpl(BookIdGeneratorService bookIdGenerator, AdminRepository adminRepository, AuthorRepository authorRepository, BookRepository bookRepository, GenreRepository genreRepository, Proxy proxy, MailService mailService) {
+        this.bookIdGenerator = bookIdGenerator;
         this.adminRepository = adminRepository;
         this.authorRepository = authorRepository;
         this.bookRepository = bookRepository;
@@ -58,6 +61,7 @@ public class AdminServiceImpl implements AdminService {
     public Admin addBook(String emailId, Book book, Author author, Genre genre) throws BookAlreadyExist, UserNotFoundException {
         Admin admin = adminRepository.findById(emailId).orElseThrow(() -> new UserNotFoundException("User Not Found Exception"));
 
+        book.setBookId(String.valueOf(bookIdGenerator.getNextBookId()));
         if (book == null) {
             throw new IllegalArgumentException("Book cannot be null");
         }
