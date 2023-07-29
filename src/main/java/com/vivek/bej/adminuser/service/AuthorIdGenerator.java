@@ -15,7 +15,7 @@ public class AuthorIdGenerator {
     public AuthorIdGenerator(AuthorSequenceRepository authorSequenceRepository) {
         this.authorSequenceRepository = authorSequenceRepository;
     }
-    public long getNextBookId() {
+    public long getNextAuthorId() {
         // Get the current bookId from the sequence collection
         AuthorSequence sequence = authorSequenceRepository.findById("author").orElse(new AuthorSequence("author", 0L));
         long currentBookId = sequence.getAuthorId();
