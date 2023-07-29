@@ -5,10 +5,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.persistence.Id;
 import java.util.Objects;
-
+@Document
 public class Book {
 
-
+@Id
     private String id;
     private String title;
     private String ISBN;

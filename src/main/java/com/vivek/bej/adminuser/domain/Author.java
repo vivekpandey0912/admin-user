@@ -8,9 +8,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 import java.util.Objects;
 
+
+@Document
 public class Author {
 
-
+@Id
     private String id;
     private String name;
 

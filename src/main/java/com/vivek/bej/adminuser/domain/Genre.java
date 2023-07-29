@@ -6,9 +6,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 import java.util.Objects;
-
+@Document
 public class Genre {
 
+    @Id
     private String id;
     private String name;
     // Other genre-related fields, e.g., description, category, etc.

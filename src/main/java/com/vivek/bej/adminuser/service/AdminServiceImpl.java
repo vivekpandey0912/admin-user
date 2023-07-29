@@ -34,24 +34,19 @@ public class AdminServiceImpl implements AdminService {
 
         @Override
         public Admin addBooks(String emailId, Book book,Author author,Genre genre) throws UserNotFoundException {
-            emailId = "vp123";
+
             Admin admin = new Admin();
             book = new Book();
                 if (adminRepository.findById(emailId).isPresent()) {
                     admin = adminRepository.findById(emailId).get();
-                    List<Book> userTaskList = admin.getListOfBooks();
-                    if (userTaskList == null) {
+                    List<Book> listOfBooks = admin.getListOfBooks();
+                    if (listOfBooks == null) {
                         book.setAuthor(author);
                         book.setGenre(genre);
-                        userTaskList = Arrays.asList(book);
-                    } else {
-                        if (userTaskList.stream().filter(data -> data.getTitle().equalsIgnoreCase(data.getTitle())).findAny().isPresent()) {
-                            throw new UserNotFoundException("Task Already Exist");
-                        } else {
-                            userTaskList.add(book);
-                        }
+                        listOfBooks = Arrays.asList(book);
                     }
-                    admin.setListOfBooks(userTaskList);
+                    listOfBooks.add(book);
+                    admin.setListOfBooks(listOfBooks);
 
                 } else {
                     throw new UserNotFoundException("User Not Found Exception");
@@ -67,6 +62,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public Admin registerAdmin(Admin admin) {
+        admin.setAdminType("admin");
         Admin admin1 = adminRepository.save(admin);
         return admin1;
     }

@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.filter.GenericFilterBean;
 
+
 import java.io.IOException;
 
 public class JwtFilter extends GenericFilterBean {
@@ -22,7 +23,7 @@ public class JwtFilter extends GenericFilterBean {
             servletOutputStream.close();
         } else {
             String jwtToken = authenticationHeader.substring("Bearer ".length());
-            String emailId = Jwts.parser().setSigningKey("ToDoKey").parseClaimsJws(jwtToken)
+            String emailId = Jwts.parser().setSigningKey("book").parseClaimsJws(jwtToken)
                     .getBody().getSubject();
             httpServletRequest.setAttribute("emailId", emailId);
         }
