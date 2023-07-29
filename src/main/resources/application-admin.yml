@@ -1,0 +1,15 @@
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: todotracker80@gmail.com
+    password: snckenyxydpccadt
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls.enable: true
+
+logging:
+  level:
+    org.springframework.boot.autoconfigure.logging: DEBUG

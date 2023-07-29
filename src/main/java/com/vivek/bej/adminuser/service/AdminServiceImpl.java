@@ -5,8 +5,10 @@ import com.vivek.bej.adminuser.domain.Author;
 import com.vivek.bej.adminuser.domain.Book;
 import com.vivek.bej.adminuser.domain.Genre;
 import com.vivek.bej.adminuser.exception.BookAlreadyExist;
+import com.vivek.bej.adminuser.exception.BookNotFoundException;
 import com.vivek.bej.adminuser.exception.UserAlreadyExist;
 import com.vivek.bej.adminuser.exception.UserNotFoundException;
+import com.vivek.bej.adminuser.mailservice.MailService;
 import com.vivek.bej.adminuser.proxy.Proxy;
 import com.vivek.bej.adminuser.repository.AdminRepository;
 import com.vivek.bej.adminuser.repository.AuthorRepository;
@@ -26,12 +28,15 @@ public class AdminServiceImpl implements AdminService {
     private final GenreRepository genreRepository;
     private final Proxy proxy;
 
-    public AdminServiceImpl(AdminRepository adminRepository, AuthorRepository authorRepository, BookRepository bookRepository, GenreRepository genreRepository, Proxy proxy) {
+    private final MailService mailService;
+
+    public AdminServiceImpl(AdminRepository adminRepository, AuthorRepository authorRepository, BookRepository bookRepository, GenreRepository genreRepository, Proxy proxy, MailService mailService) {
         this.adminRepository = adminRepository;
         this.authorRepository = authorRepository;
         this.bookRepository = bookRepository;
         this.genreRepository = genreRepository;
         this.proxy = proxy;
+        this.mailService = mailService;
     }
 
 
@@ -69,7 +74,7 @@ public class AdminServiceImpl implements AdminService {
         book.setAuthor(author);
         book.setGenre(genre);
         listOfBooks.add(book);
-
+        mailService.sendBookAddedNotification(emailId,book);
         return adminRepository.save(admin);
 
     }
@@ -92,23 +97,44 @@ public class AdminServiceImpl implements AdminService {
 
             // Update the book details if provided
             if (updatedBookData != null) {
-                bookToUpdate.setTitle(updatedBookData.getTitle());
-                bookToUpdate.setDescription(updatedBookData.getDescription());
+                bookToUpdate.setISBN(updatedBookData.getISBN());
                 bookToUpdate.setYearOfPublication(updatedBookData.getYearOfPublication());
-                bookToUpdate.setIsbn(updatedBookData.getIsbn());
+                bookToUpdate.setBookImage(updatedBookData.getBookImage());
+
             }
 
             // Update the author details if provided
             if (updatedAuthorData != null) {
-                bookToUpdate.getAuthor().setName(updatedAuthorData.getName());
-                bookToUpdate.getAuthor().setEmail(updatedAuthorData.getEmail());
-                // Update other author properties as needed...
+                // If the author already exists in the database (has an ID), update its properties
+                if (updatedAuthorData.getId() != null) {
+                    Author existingAuthor = authorRepository.findById(updatedAuthorData.getId()).orElse(null);
+                    if (existingAuthor != null) {
+                        existingAuthor.setName(updatedAuthorData.getName());
+                        // Update other author properties as needed...
+                        bookToUpdate.setAuthor(existingAuthor);
+                    }
+                } else {
+                    // If the author is new and not in the database, save it first
+                    Author newAuthor = authorRepository.save(updatedAuthorData);
+                    bookToUpdate.setAuthor(newAuthor);
+                }
             }
 
             // Update the genre details if provided
             if (updatedGenreData != null) {
-                bookToUpdate.getGenre().setName(updatedGenreData.getName());
-                // Update other genre properties as needed...
+                // If the genre already exists in the database (has an ID), update its properties
+                if (updatedGenreData.getId() != null) {
+                    Genre existingGenre = genreRepository.findById(updatedGenreData.getId()).orElse(null);
+                    if (existingGenre != null) {
+                        existingGenre.setName(updatedGenreData.getName());
+                        // Update other genre properties as needed...
+                        bookToUpdate.setGenre(existingGenre);
+                    }
+                } else {
+                    // If the genre is new and not in the database, save it first
+                    Genre newGenre = genreRepository.save(updatedGenreData);
+                    bookToUpdate.setGenre(newGenre);
+                }
             }
 
             // Save the updated book
@@ -119,7 +145,40 @@ public class AdminServiceImpl implements AdminService {
         }
     }
 
+    @Override
+    public List<Book> getAllBooks(String emailId) throws UserNotFoundException, BookNotFoundException {
+        Admin admin = adminRepository.findById(emailId).orElseThrow(() -> new UserNotFoundException("User Not Found Exception"));
+        List<Book> listOfBooks = admin.getListOfBooks();
+        if (listOfBooks == null) {
+            return Collections.emptyList();
+        }
+        return listOfBooks;
+    }
 
+    // AdminService.java
+   @Override
+    public void deleteBookByTitle(String emailId, String title) throws UserNotFoundException, BookNotFoundException {
+       Admin admin = adminRepository.findById(emailId).orElseThrow(() -> new UserNotFoundException("User Not Found Exception"));
+
+       List<Book> listOfBooks = admin.getListOfBooks();
+       if (listOfBooks == null) {
+           listOfBooks = new ArrayList<>(); // Create a new empty list if listOfBooks is null
+       }
+
+       // Find the book with the given title
+       Optional<Book> optionalBook = listOfBooks.stream().filter(book -> book.getTitle().equalsIgnoreCase(title)).findFirst();
+
+       if (optionalBook.isPresent()) {
+           Book bookToDelete = optionalBook.get();
+           listOfBooks.remove(bookToDelete);
+           mailService.sendBookDeletedNotification(emailId,bookToDelete);
+           admin.setListOfBooks(listOfBooks);
+           adminRepository.save(admin);
+       } else {
+           throw new BookNotFoundException("Book Not Found");
+       }
+
+   }
 }
 
 

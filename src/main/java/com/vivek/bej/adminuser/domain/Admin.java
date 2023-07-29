@@ -19,9 +19,7 @@ public class Admin {
     private String name;
     private String phNo;
     private String profileImg;
-
     private String adminType;
-
     List<Book> listOfBooks;
 
     public Admin(String emailId, String password, String name, String phNo, String profileImg, String adminType, List<Book> listOfBooks) {

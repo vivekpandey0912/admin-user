@@ -9,14 +9,16 @@ public class Book {
     private String bookId;
     private String title;
     private String ISBN;
+    private String bookImage;
     private String yearOfPublication;
     private Author author;
     private Genre genre;
 
-    public Book(String bookId, String title, String ISBN, String yearOfPublication, Author author, Genre genre) {
+    public Book(String bookId, String title, String ISBN, String bookImage, String yearOfPublication, Author author, Genre genre) {
         this.bookId = bookId;
         this.title = title;
         this.ISBN = ISBN;
+        this.bookImage = bookImage;
         this.yearOfPublication = yearOfPublication;
         this.author = author;
         this.genre = genre;
@@ -49,6 +51,14 @@ public class Book {
         this.ISBN = ISBN;
     }
 
+    public String getBookImage() {
+        return bookImage;
+    }
+
+    public void setBookImage(String bookImage) {
+        this.bookImage = bookImage;
+    }
+
     public String getYearOfPublication() {
         return yearOfPublication;
     }
@@ -78,12 +88,13 @@ public class Book {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Book book = (Book) o;
-        return Objects.equals(bookId, book.bookId) && Objects.equals(title, book.title) && Objects.equals(ISBN, book.ISBN) && Objects.equals(yearOfPublication, book.yearOfPublication) && Objects.equals(author, book.author) && Objects.equals(genre, book.genre);
+        return Objects.equals(bookId, book.bookId) && Objects.equals(title, book.title) && Objects.equals(ISBN, book.ISBN) && Objects.equals(bookImage, book.bookImage) && Objects.equals(yearOfPublication, book.yearOfPublication) && Objects.equals(author, book.author) && Objects.equals(genre, book.genre);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(bookId, title, ISBN, yearOfPublication, author, genre);
+        return Objects.hash(bookId, title, ISBN, bookImage, yearOfPublication, author, genre);
+
     }
 
     @Override
@@ -92,6 +103,7 @@ public class Book {
                 "bookId='" + bookId + '\'' +
                 ", title='" + title + '\'' +
                 ", ISBN='" + ISBN + '\'' +
+                ", bookImage='" + bookImage + '\'' +
                 ", yearOfPublication='" + yearOfPublication + '\'' +
                 ", author=" + author +
                 ", genre=" + genre +
