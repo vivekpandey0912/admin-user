@@ -4,9 +4,11 @@ import com.vivek.bej.adminuser.filter.JwtFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
+@EnableFeignClients
 public class AdminUserApplication {
 
     public static void main(String[] args) {
@@ -19,7 +21,7 @@ public class AdminUserApplication {
     public FilterRegistrationBean<JwtFilter> registerFilterBean() {
         FilterRegistrationBean<JwtFilter> jwtFilterBean = new FilterRegistrationBean<>();
         jwtFilterBean.setFilter(new JwtFilter());
-        jwtFilterBean.addUrlPatterns("/admin/*");
+        jwtFilterBean.addUrlPatterns("/adminbook/admin/*");
         return jwtFilterBean;
     }
 
