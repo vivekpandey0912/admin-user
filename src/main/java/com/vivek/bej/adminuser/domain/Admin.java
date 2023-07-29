@@ -10,18 +10,21 @@ import java.util.Objects;
 @Document
 public class Admin {
 
-   @Id
+    @Id
     private String emailId;
 
-   private String password;
+    private String password;
     private String name;
-    private List<Author> authorList;
 
-    public Admin(String emailId, String password, String name, List<Author> authorList) {
+
+    @DBRef
+    List<Book> listOfBooks;
+
+    public Admin(String emailId, String password, String name, List<Book> listOfBooks) {
         this.emailId = emailId;
         this.password = password;
         this.name = name;
-        this.authorList = authorList;
+        this.listOfBooks = listOfBooks;
     }
 
     public Admin() {
@@ -51,12 +54,12 @@ public class Admin {
         this.name = name;
     }
 
-    public List<Author> getAuthorList() {
-        return authorList;
+    public List<Book> getListOfBooks() {
+        return listOfBooks;
     }
 
-    public void setAuthorList(List<Author> authorList) {
-        this.authorList = authorList;
+    public void setListOfBooks(List<Book> listOfBooks) {
+        this.listOfBooks = listOfBooks;
     }
 
     @Override
@@ -64,11 +67,22 @@ public class Admin {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Admin admin = (Admin) o;
-        return Objects.equals(emailId, admin.emailId) && Objects.equals(password, admin.password) && Objects.equals(name, admin.name) && Objects.equals(authorList, admin.authorList);
+        return Objects.equals(emailId, admin.emailId) && Objects.equals(password, admin.password) && Objects.equals(name, admin.name) && Objects.equals(listOfBooks, admin.listOfBooks);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(emailId, password, name, authorList);
+        return Objects.hash(emailId, password, name, listOfBooks);
+    }
+
+    @Override
+    public String toString() {
+        return "Admin{" +
+                "emailId='" + emailId + '\'' +
+                ", password='" + password + '\'' +
+                ", name='" + name + '\'' +
+                ", listOfBooks=" + listOfBooks +
+                '}';
     }
 }
+

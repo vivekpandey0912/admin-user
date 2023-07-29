@@ -7,23 +7,19 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 import java.util.Objects;
 
-@Document
 public class Genre {
 
-    @Id
     private String id;
     private String name;
     // Other genre-related fields, e.g., description, category, etc.
-    @DBRef
-    private List<Book> books;
 
-    public Genre(String id, String name, List<Book> books) {
-        this.id = id;
-        this.name = name;
-        this.books = books;
-    }
 
     public Genre() {
+    }
+
+    public Genre(String id, String name) {
+        this.id = id;
+        this.name = name;
     }
 
     public String getId() {
@@ -42,25 +38,17 @@ public class Genre {
         this.name = name;
     }
 
-    public List<Book> getBooks() {
-        return books;
-    }
-
-    public void setBooks(List<Book> books) {
-        this.books = books;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Genre genre = (Genre) o;
-        return Objects.equals(id, genre.id) && Objects.equals(name, genre.name) && Objects.equals(books, genre.books);
+        return Objects.equals(id, genre.id) && Objects.equals(name, genre.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, books);
+        return Objects.hash(id, name);
     }
 
     @Override
@@ -68,7 +56,6 @@ public class Genre {
         return "Genre{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
-                ", books=" + books +
                 '}';
     }
 }

@@ -10,6 +10,11 @@ import com.vivek.bej.adminuser.exception.UserNotFoundException;
 public interface AdminService {
 
 
-    public Admin addBook(String emailId, Author author, Genre genre, Book book) throws UserNotFoundException;
+    public Admin addBook(String emailId, Book book) throws UserNotFoundException;
+
+
+    public Admin registerAdmin(Admin admin);
+
+    public Admin addBooks(String emailId, Book book, Author author, Genre genre) throws UserNotFoundException;
 
 }
