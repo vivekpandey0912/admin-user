@@ -2,7 +2,7 @@ package com.vivek.bej.adminuser.domain;
 import org.springframework.data.mongodb.core.mapping.*;
 
 
-import java.beans.Transient;
+import javax.persistence.Transient;
 import java.util.List;
 import java.util.Objects;
 
