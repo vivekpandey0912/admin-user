@@ -12,12 +12,13 @@ public class AuthorIdGenerator {
 
     private final AuthorSequenceRepository authorSequenceRepository;
 
+    @Autowired
     public AuthorIdGenerator(AuthorSequenceRepository authorSequenceRepository) {
         this.authorSequenceRepository = authorSequenceRepository;
     }
     public long getNextAuthorId() {
         // Get the current bookId from the sequence collection
-        AuthorSequence sequence = authorSequenceRepository.findById("author").orElse(new AuthorSequence("author", 0L));
+        AuthorSequence sequence = authorSequenceRepository.findById("author").orElse(new AuthorSequence("author", 100L));
         long currentBookId = sequence.getAuthorId();
 
         // Increment the bookId and save it back to the sequence collection

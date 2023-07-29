@@ -1,16 +1,14 @@
 package com.vivek.bej.adminuser.domain;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.List;
 import java.util.Objects;
 @Document
 public class Genre {
 
     @Id
-    private String id;
+    private String genreId;
     private String name;
     // Other genre-related fields, e.g., description, category, etc.
 
@@ -18,17 +16,17 @@ public class Genre {
     public Genre() {
     }
 
-    public Genre(String id, String name) {
-        this.id = id;
+    public Genre(String GenreId, String name) {
+        this.genreId = GenreId;
         this.name = name;
     }
 
-    public String getId() {
-        return id;
+    public String getGenreId() {
+        return genreId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setGenreId(String genreId) {
+        this.genreId = genreId;
     }
 
     public String getName() {
@@ -44,18 +42,18 @@ public class Genre {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Genre genre = (Genre) o;
-        return Objects.equals(id, genre.id) && Objects.equals(name, genre.name);
+        return Objects.equals(genreId, genre.genreId) && Objects.equals(name, genre.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(genreId, name);
     }
 
     @Override
     public String toString() {
         return "Genre{" +
-                "id='" + id + '\'' +
+                "id='" + genreId + '\'' +
                 ", name='" + name + '\'' +
                 '}';
     }

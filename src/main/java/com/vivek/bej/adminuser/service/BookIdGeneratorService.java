@@ -16,7 +16,7 @@ public class BookIdGeneratorService {
 
     public long getNextBookId() {
         // Get the current bookId from the sequence collection
-        Sequence sequence = sequenceRepository.findById("book").orElse(new Sequence("book", 0L));
+        Sequence sequence = sequenceRepository.findById("book").orElse(new Sequence("book", 1000L));
         long currentBookId = sequence.getBookId();
 
         // Increment the bookId and save it back to the sequence collection

@@ -22,6 +22,8 @@ import java.util.*;
 public class AdminServiceImpl implements AdminService {
 
     private final BookIdGeneratorService bookIdGenerator;
+    private final AuthorIdGenerator authorIdGenerator;
+    private final GenreIdGenerator genreIdGenerator;
 
 
     private final AdminRepository adminRepository;
@@ -32,8 +34,10 @@ public class AdminServiceImpl implements AdminService {
 
     private final MailService mailService;
 
-    public AdminServiceImpl(BookIdGeneratorService bookIdGenerator, AdminRepository adminRepository, AuthorRepository authorRepository, BookRepository bookRepository, GenreRepository genreRepository, Proxy proxy, MailService mailService) {
+    public AdminServiceImpl(BookIdGeneratorService bookIdGenerator, AuthorIdGenerator authorIdGenerator, GenreIdGenerator genreIdGenerator, AdminRepository adminRepository, AuthorRepository authorRepository, BookRepository bookRepository, GenreRepository genreRepository, Proxy proxy, MailService mailService) {
         this.bookIdGenerator = bookIdGenerator;
+        this.authorIdGenerator = authorIdGenerator;
+        this.genreIdGenerator = genreIdGenerator;
         this.adminRepository = adminRepository;
         this.authorRepository = authorRepository;
         this.bookRepository = bookRepository;
@@ -59,30 +63,41 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public Admin addBook(String emailId, Book book, Author author, Genre genre) throws BookAlreadyExist, UserNotFoundException {
-        Admin admin = adminRepository.findById(emailId).orElseThrow(() -> new UserNotFoundException("User Not Found Exception"));
+            Admin admin = adminRepository.findById(emailId).orElseThrow(() -> new UserNotFoundException("User Not Found Exception"));
 
-        book.setBookId(String.valueOf(bookIdGenerator.getNextBookId()));
-        if (book == null) {
-            throw new IllegalArgumentException("Book cannot be null");
+            book.setBookId(String.valueOf(bookIdGenerator.getNextBookId()));
+
+            if (book == null) {
+                throw new IllegalArgumentException("Book cannot be null");
+            }
+
+            List<Book> listOfBooks = admin.getListOfBooks();
+            if (listOfBooks == null) {
+                listOfBooks = new ArrayList<>();
+                admin.setListOfBooks(listOfBooks);
+            }
+
+            if (listOfBooks.stream().anyMatch(data -> data.getTitle().equalsIgnoreCase(book.getTitle()))) {
+                throw new BookAlreadyExist("Book Already Exists");
+            }
+
+            if (author != null) {
+                author.setAuthorId(String.valueOf(authorIdGenerator.getNextAuthorId()));
+                author = authorRepository.save(author);
+                book.setAuthor(author);
+            }
+
+            if (genre != null) {
+                genre.setGenreId(String.valueOf(genreIdGenerator.getNextGenreId()));
+                genre = genreRepository.save(genre);
+                book.setGenre(genre);
+            }
+
+            listOfBooks.add(book);
+            mailService.sendBookAddedNotification(emailId, book);
+            return adminRepository.save(admin);
         }
 
-        List<Book> listOfBooks = admin.getListOfBooks();
-        if (listOfBooks == null) {
-            listOfBooks = new ArrayList<>();
-            admin.setListOfBooks(listOfBooks);
-        }
-
-        if (listOfBooks.stream().anyMatch(data -> data.getTitle().equalsIgnoreCase(book.getTitle()))) {
-            throw new BookAlreadyExist("Book Already Exists");
-        }
-
-        book.setAuthor(author);
-        book.setGenre(genre);
-        listOfBooks.add(book);
-        mailService.sendBookAddedNotification(emailId,book);
-        return adminRepository.save(admin);
-
-    }
 
 
     @Override
@@ -111,8 +126,8 @@ public class AdminServiceImpl implements AdminService {
             // Update the author details if provided
             if (updatedAuthorData != null) {
                 // If the author already exists in the database (has an ID), update its properties
-                if (updatedAuthorData.getId() != null) {
-                    Author existingAuthor = authorRepository.findById(updatedAuthorData.getId()).orElse(null);
+                if (updatedAuthorData.getAuthorId() != null) {
+                    Author existingAuthor = authorRepository.findById(updatedAuthorData.getAuthorId()).orElse(null);
                     if (existingAuthor != null) {
                         existingAuthor.setName(updatedAuthorData.getName());
                         // Update other author properties as needed...
@@ -128,8 +143,8 @@ public class AdminServiceImpl implements AdminService {
             // Update the genre details if provided
             if (updatedGenreData != null) {
                 // If the genre already exists in the database (has an ID), update its properties
-                if (updatedGenreData.getId() != null) {
-                    Genre existingGenre = genreRepository.findById(updatedGenreData.getId()).orElse(null);
+                if (updatedGenreData.getGenreId() != null) {
+                    Genre existingGenre = genreRepository.findById(updatedGenreData.getGenreId()).orElse(null);
                     if (existingGenre != null) {
                         existingGenre.setName(updatedGenreData.getName());
                         // Update other genre properties as needed...
