@@ -1,6 +1,7 @@
 package com.vivek.bej.adminuser.controller;
 
 
+import com.vivek.bej.adminuser.controller.requests.AddBookRequest;
 import com.vivek.bej.adminuser.domain.Admin;
 import com.vivek.bej.adminuser.domain.Author;
 import com.vivek.bej.adminuser.exception.BookAlreadyExist;
@@ -31,10 +32,10 @@ public class AdminController {
 
 
     @PostMapping("/admin/addBooks")
-    public ResponseEntity<?> addBookS(HttpServletRequest httpServletRequest, @RequestBody Book book, @RequestBody Author author,@RequestBody Genre genre) {
+    public ResponseEntity<?> addBookS(HttpServletRequest httpServletRequest, @RequestBody AddBookRequest addBookRequest) {
         String emailId = httpServletRequest.getAttribute("emailId").toString();
         try {
-            List<Book> bookList = adminService.addBook(emailId, book,author,genre).getListOfBooks();
+            List<Book> bookList = adminService.addBook(emailId, addBookRequest.getBook(),addBookRequest.getAuthor(),addBookRequest.getGenre()).getListOfBooks();
             return new ResponseEntity<>(bookList, HttpStatus.OK);
         } catch (UserNotFoundException userNotFound) {
             return new ResponseEntity<>("User Not Found", HttpStatus.NOT_FOUND);
