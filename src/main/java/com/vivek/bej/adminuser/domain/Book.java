@@ -1,7 +1,5 @@
 package com.vivek.bej.adminuser.domain;
 
-//import org.springframework.data.mongodb.core.mapping.DBRef;
-//import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
 import java.util.Objects;
